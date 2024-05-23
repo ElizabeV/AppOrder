@@ -45,6 +45,7 @@ out/
 !**/src/test/**
 
 ### VS Code ###
+
 .vscode/
 
 ### Mac OS ###
