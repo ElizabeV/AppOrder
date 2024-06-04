@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -18,18 +19,18 @@ class SendFormTest {
     private WebDriver driver;
 
     @BeforeAll
-    public static void setupAll() {
+    static void setupAll() {
       WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
-    public void BeforeEach() {
+    void BeforeEach() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
-        driver.get("http://localhost:9999");
+        driver.get("http://localhost:9999"); //загрузи страницу
     }
 
     @AfterEach
@@ -40,6 +41,17 @@ class SendFormTest {
 
     @Test
     void shouldFillCheckAndClick() {
+        //WebElement form = driver.findElement(By.cssSelector("[.form_theme_alfa-on-white]"));
+        driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Римский-Корсаков Николай");
+        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+78005553535");
+        driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
+        driver.findElement(By.cssSelector("button.button")).click();
+        var actualTextElement = driver.findElement(By.cssSelector("[data-test-id=order-success]"));
+        var actualText = actualTextElement.getText().trim();
+        assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", actualText);
+        assertTrue(actualTextElement.isDisplayed());
+        /*
+
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("ЭЭЭ ЭЭ");
         driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+78005553535");
         driver.findElement(By.cssSelector("[data-test-id='agreement'] input")).click();
@@ -48,7 +60,9 @@ class SendFormTest {
         var actualText = actualTextElement.getText().trim();
         assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", actualText);
         assertTrue(actualTextElement.isDisplayed());
-        /* open("http://localhost:9999");
+
+
+        open("http://localhost:9999");
         //SelenideElement form = $("[data-test-id]=name);
         $("[data-test-id='name'] input").setValue("Римский-Корсаков Николай");
         $("[data-test-id='phone'] input").setValue("+79019019012");
